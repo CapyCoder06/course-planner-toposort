@@ -1,0 +1,9 @@
+{
+  "courses": [
+    { "id": "DM101", "name": "Discrete Math I", "credits": 3 },
+    { "id": "GT101", "name": "Graph Theory", "credits": 3, "prereq": ["DM101"] },
+    { "id": "ALG101", "name": "Algorithms I", "credits": 4, "prereq": ["DM101"] },
+    { "id": "ALG201", "name": "Algorithms II", "credits": 4, "prereq": ["ALG101","GT101"] }
+  ],
+  "constraints": { "maxCreditsPerTerm": 18, "minCreditsPerTerm": 12, "numTerms": 8 }
+}
