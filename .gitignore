@@ -1,41 +1,33 @@
-# Prerequisites
-*.d
+# C++
+/build/
+/out/
+/cmake-build-*/
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# VSCode / IDE
+.vscode/
+*.user
+*.log
 
-# Precompiled Headers
-*.gch
-*.pch
+# Node
+ui/node_modules/
+ui/dist/
+ui/.vite/
 
-# Linker files
-*.ilk
+# System
+.DS_Store
+Thumbs.db
+# UI build/cache
+/ui/node_modules/
+/ui/dist/
+/ui/.vite/
 
-# Debugger Files
-*.pdb
+# C++ build
+/build/
+/out/
+/cmake-build-*/
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# debug information files
-*.dwo
+# Editor / system
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
