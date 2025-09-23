@@ -1,5 +1,15 @@
-/*Định nghĩa ràng buộc lập kế hoạch: max/min tín chỉ mỗi kỳ, số kỳ, bật/tắt coreq cùng kỳ, v.v.
+#pragma once
+#include <vector>
+#include <stdexcept>
+using namespace std;
 
-Ghi chú: phạm vi hợp lệ, mặc định hợp lý.
+struct PlanConstraints 
+{
+    int numTerms;
+    int maxcredits;
+    int mincredits;
+    bool enforceCoreqTogether;
+    vector<int> offered_terms;
 
-AC: Đủ thông tin để thuật toán xếp kỳ hoạt động mà không cần thêm config*/
+    void validate() const;
+};
