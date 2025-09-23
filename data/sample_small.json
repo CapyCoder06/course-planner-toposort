@@ -3,7 +3,24 @@
     { "id": "DM101", "name": "Discrete Math I", "credits": 3 },
     { "id": "GT101", "name": "Graph Theory", "credits": 3, "prereq": ["DM101"] },
     { "id": "ALG101", "name": "Algorithms I", "credits": 4, "prereq": ["DM101"] },
-    { "id": "ALG201", "name": "Algorithms II", "credits": 4, "prereq": ["ALG101","GT101"] }
+    { "id": "ALG201", "name": "Algorithms II", "credits": 4, "prereq": ["ALG101","GT101"] },
+    { "id": "LLCT130105E", "name": "Philosophy of Marxism and Leninism", "credits": 3 },
+    { "id": "LLCT120205E", "name": "Political Economics of Marxism and Leninism", "credits": 2 },
+    { "id": "LLCT220514E", "name": "History of Vietnamese Communist Party", "credits": 2 },
+    { "id": "LLCT120314E", "name": "Ho Chi Minh’s Ideology", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "GELA220405E", "name": "General Law", "credits": 2 },
+    { "id": "MATH132901E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+    { "id": "LLCT120405E", "name": "Scientific Socialism", "credits": 2 },
+
+    
   ],
   "constraints": { "maxCreditsPerTerm": 18, "minCreditsPerTerm": 12, "numTerms": 8 }
 }
