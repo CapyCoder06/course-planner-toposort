@@ -3,6 +3,7 @@
     { "id": "DM101", "name": "Discrete Math I", "credits": 3 },
     { "id": "GT101", "name": "Graph Theory", "credits": 3, "prereq": ["DM101"] },
     { "id": "ALG101", "name": "Algorithms I", "credits": 4, "prereq": ["DM101"] },
+    //A
     { "id": "ALG201", "name": "Algorithms II", "credits": 4, "prereq": ["ALG101","GT101"] },
     { "id": "LLCT130105E", "name": "Philosophy of Marxism and Leninism", "credits": 3 },
     { "id": "LLCT120205E", "name": "Political Economics of Marxism and Leninism", "credits": 2 },
@@ -18,7 +19,11 @@
     { "id": "PHYS111202E", "name": "Physics 1 - Laboratory", "credits": 1 },
     { "id": "EEEN231780E", "name": "Basic Electronics", "credits": 2 },
     { "id": "PRBE214262E", "name": "Practice Basic Electronics", "credits": 1 },
-    { "id": "INIT130185E", "name": "Introduction to Information Technology", "credits": 3 }
+    { "id": "INIT130185E", "name": "Introduction to Information Technology", "credits": 3 },
+    { "id": "INPR130285E", "name": "Introduction to programming", "credits": 3 },
+    { "id": "PHED110130", "name": "Physical Education 1", "credits": 1 }
+    
+    //B
   ],
   "constraints": { "maxCreditsPerTerm": 18, "minCreditsPerTerm": 12, "numTerms": 8 }
 }
