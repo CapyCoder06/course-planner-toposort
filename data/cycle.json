@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "name": "Cyclic Dependencies Sample",
+    "description": "Sample dataset with cyclic prerequisites for testing cycle detection",
+    "version": "1.0"
+  },
+  "constraints": {
+    "numTerms": 8,
+    "maxCreditsPerTerm": 28,
+    "minCreditsPerTerm": 25,
+    "enforceCoreqTogether": true
+  },
+  "courses": [
+    {
+      "id": "A",
+      "name": "Course A",
+      "credits": 3,
+      "prereq": ["C"]
+    },
+    {
+      "id": "B",
+      "name": "Course B",
+      "credits": 3,
+      "prereq": ["A"]
+    },
+    {
+      "id": "C",
+      "name": "Course C",
+      "credits": 3,
+      "prereq": ["B"]
+    },
+    {
+      "id": "D",
+      "name": "Course D (Independent)",
+      "credits": 3,
+      "prereq": []
+    },
+    {
+      "id": "E",
+      "name": "Course E (Depends on D)",
+      "credits": 3,
+      "prereq": ["D"]
+    },
+    {
+      "id": "X",
+      "name": "Course X",
+      "credits": 3,
+      "prereq": ["Z"]
+    },
+    {
+      "id": "Y",
+      "name": "Course Y",
+      "credits": 3,
+      "prereq": ["X"]
+    },
+    {
+      "id": "Z",
+      "name": "Course Z",
+      "credits": 3,
+      "prereq": ["Y"]
+    }
+  ]
+}

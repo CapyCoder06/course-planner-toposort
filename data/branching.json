@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "name": "Branching Structure Sample",
+    "description": "Sample dataset with branching prerequisite structure for testing topological sorting",
+    "version": "1.0"
+  },
+  "constraints": {
+    "numTerms": 8,
+    "maxCreditsPerTerm": 28,
+    "minCreditsPerTerm": 15,
+    "enforceCoreqTogether": true
+  },
+  "courses": [
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "credits": 4,
+      "prereq": []
+    },
+    {
+      "id": "MATH102",
+      "name": "Calculus II",
+      "credits": 4,
+      "prereq": ["MATH101"]
+    },
+    {
+      "id": "PHYS101",
+      "name": "Physics I",
+      "credits": 4,
+      "prereq": ["MATH101"]
+    },
+    {
+      "id": "CS101",
+      "name": "Programming Fundamentals",
+      "credits": 3,
+      "prereq": []
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures",
+      "credits": 3,
+      "prereq": ["CS101"]
+    },
+    {
+      "id": "CS202",
+      "name": "Algorithms",
+      "credits": 3,
+      "prereq": ["CS201", "MATH102"]
+    },
+    {
+      "id": "ENG101",
+      "name": "English Composition",
+      "credits": 3,
+      "prereq": []
+    },
+    {
+      "id": "STAT201",
+      "name": "Statistics",
+      "credits": 3,
+      "prereq": ["MATH101"]
+    },
+    {
+      "id": "CS301",
+      "name": "Software Engineering",
+      "credits": 3,
+      "prereq": ["CS202"]
+    },
+    {
+      "id": "CS302",
+      "name": "Database Systems",
+      "credits": 3,
+      "prereq": ["CS201"]
+    },
+    {
+      "id": "CS401",
+      "name": "Senior Project",
+      "credits": 3,
+      "prereq": ["CS301", "CS302"]
+    }
+  ]
+}
