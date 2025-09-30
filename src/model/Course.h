@@ -12,8 +12,8 @@ struct Course {
     std::string id;
     std::string name;
     unsigned short credits;
-    std::vector<std::string> prereqisite;
-    std::vector<std::string> coreqisite;
+    std::vector<std::string> prerequisite;
+    std::vector<std::string> corequisite;
     std::optional<std::string> elective_groups;
     std::unordered_set<unsigned short> offered_terms;
 };

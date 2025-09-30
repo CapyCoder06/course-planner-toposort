@@ -1,5 +1,25 @@
-/*Khai báo cấu trúc đồ thị: số đỉnh, adjacency list, in-degree, mapping id ↔ index.
+/*
+ * CourseGraph
+ * - V: số đỉnh
+ * - adj[v]: danh sách u sao cho v -> u (prereq -> course)
+ * - indeg[u]: số cạnh vào u
+ * - idToIdx: id -> index
+ * - idxToId: index -> id (debug/in kết quả)
+ *
+ * AC: Interface đủ cho topo sort, longest path, cycle detection.
+ */
 
-Khai báo hàm build đồ thị từ Curriculum.
+#pragma once
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include "Curriculum.h"
+struct CourseGraph {
+    int V = 0;
+    std::vector<std::vector<int>> adj;
+    std::vector<int> indeg;
+    std::unordered_map<std::string, int> idToIdx;
+    std::vector<std::string> idxToId;
 
-AC: Interface đủ cho topo sort, longest path, cycle detection.
+    void build(const Curriculum& cur);
+};

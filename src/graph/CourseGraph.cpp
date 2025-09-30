@@ -1,21 +1,43 @@
-/*Xây mapping id → index, mảng idOf.
+#include "CourseGraph.h"
+#include <stdexcept>
+#include <string>
 
-Tạo cạnh prereq → course.
+void CourseGraph::build(const Curriculum& cur) {
+    // 1) Map id -> idx & idx -> id
+    idToIdx.clear();
+    idxToId.clear();
 
-Tính in-degree cho mỗi node.
+    cur.for_each([&](const Course& c) {
+        if (c.id.empty()) {
+            throw std::runtime_error("CourseGraph: empty id");
+        }
+        if (idToIdx.count(c.id)) {
+            throw std::runtime_error(std::string("CourseGraph: duplicate id: ") + c.id);
+        }
+        int idx = static_cast<int>(idToIdx.size());
+        idToIdx.emplace(c.id, idx);
+        idxToId.push_back(c.id);
+    }); 
 
-AC: Với input mẫu, số đỉnh/cạnh đúng, in-degree hợp lý.
+    // 2) Khởi tạo khung đồ thị
+    V = static_cast<int>(idToIdx.size());
+    adj.assign(V, {});   // V danh sách kề rỗng
+    indeg.assign(V, 0);  // V số 0
 
-(khuyến nghị) src/graph/TopoSort.h / .cpp
-
-Khai báo & hiện thực thuật toán topo (Kahn/DFS).
-
-Trả thứ tự topo + cờ success (false nếu có vòng).
-
-AC: Đồ thị DAG cho thứ tự hợp lệ; đồ thị có vòng báo fail.
-
-(khuyến nghị) src/planner/CycleDiagnosis.h / .cpp
-
-Phát hiện và liệt kê vòng (danh sách node/cạnh).
-
-AC: Khi topo thất bại, có thể truy ra ít nhất một vòng cụ thể.*/
+    // 3) Thêm cạnh prereq -> course, tính indeg
+    cur.for_each([&](const Course& c) {
+        const int u = idToIdx.at(c.id); // course (đích)
+        for (const auto& preId : c.prerequisite) {
+            auto it = idToIdx.find(preId);
+            if (it == idToIdx.end()) {
+                throw std::runtime_error(
+                    std::string("CourseGraph: unknown prerequisite '") + preId +
+                    "' required by '" + c.id + "'"
+                );
+            }
+            const int v = it->second;   // prereq (nguồn)
+            adj[v].push_back(u);        // v -> u
+            indeg[u]++;
+        }
+    });
+}
