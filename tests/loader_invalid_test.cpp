@@ -33,7 +33,7 @@ protected:
 TEST_F(LoaderKhongHopLeTest, ThieuTinChiMonHoc)
 {
     json j = {
-        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
+        {"constraints", {{"maxCreditsPerTerm", 28}, {"minCreditsPerTerm", 15}, {"numTerms", 8}}},
         {"courses", {{
                         {"id", "CS101"}, {"name", "Lập trình I"} // Thiếu "credits"
                     }}}};
