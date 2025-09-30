@@ -19,10 +19,20 @@ enable_testing()
 add_executable(planner_tests
   tests/smoke_test.cpp
   tests/loader_test.cpp
+  tests/loader_invalid_test.cpp
+  tests/loader_valid_test.cpp
 )
+
+find_package(GTest CONFIG REQUIRED)
 target_link_libraries(planner_tests PRIVATE planner GTest::gtest_main)
 include(GoogleTest)
 gtest_discover_tests(planner_tests)
+
+# nlohmann/json
+target_include_directories(planner PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/external
+)
 
 # CLI
 add_executable(planner_cli src/cli/main.cpp)
