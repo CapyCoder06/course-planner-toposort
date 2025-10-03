@@ -16,8 +16,24 @@ API xuất kế hoạch ra JSON + Markdown.
 
 AC: Có thể ghi ra terms, tổng tín chỉ/kỳ, và ghi chú.
 */
+/*
+Đọc file JSON → parse thành Course, Curriculum, PlanConstraints.
+
+Validate:
+- Thiếu trường bắt buộc.
+- Tín chỉ > 0.
+- id không trùng.
+- Tham chiếu prereq/coreq phải tồn tại.
+- Nếu có offered_terms: nằm trong [1..numTerms].
+- Thông báo lỗi có mã/ngữ cảnh (ví dụ: path khóa bị lỗi).
+
+AC: Input hợp lệ → load ok; input lỗi → ném lỗi rõ ràng.
+*/
 
 #include "Loader.h"
+#include "model/Course.h"
+#include "model/Curriculum.h"
+#include "model/PlanConstraints.h"
 #include <fstream>
 #include <sstream>
 #include <unordered_set>
@@ -27,13 +43,6 @@ using json = nlohmann::json;
 
 namespace planner
 {
-
-    /**
-     * @brief Nạp dữ liệu từ file JSON
-     * @param filePath Đường dẫn tới file JSON
-     * @return LoadResult gồm curriculum + constraints
-     * @throws LoadException nếu có lỗi validate
-     */
     LoadResult loadFromJsonFile(const std::string &filePath)
     {
         std::ifstream file(filePath);
@@ -44,7 +53,6 @@ namespace planner
                 "FILE_NOT_FOUND",
                 filePath);
         }
-
         json j;
         try
         {
@@ -60,79 +68,38 @@ namespace planner
 
         return loadFromJson(j, filePath);
     }
-
-    /**
-     * @brief Nạp dữ liệu từ đối tượng JSON
-     * @param j Đối tượng JSON cần parse
-     * @param context Ngữ cảnh để báo lỗi (vd: tên file)
-     * @return LoadResult gồm curriculum + constraints
-     * @throws LoadException nếu dữ liệu không hợp lệ
-     */
     LoadResult loadFromJson(const nlohmann::json &j, const std::string &context)
     {
         LoadResult result;
-
-        // Kiểm tra cấu trúc cấp cao nhất
         validateRequired(j, {"courses", "constraints"}, context);
-
-        // Parse constraints trước (cần để validate)
         result.constraints = parseConstraints(j["constraints"], context + ".constraints");
-
-        // Parse danh sách môn học
         result.curriculum = parseCurriculum(j["courses"], result.constraints, context + ".courses");
-
-        return result;
-    }
-
-    /**
-     * @brief Parse ràng buộc kế hoạch từ JSON
-     */
-    PlanConstraints parseConstraints(const nlohmann::json &j, const std::string &context)
-    {
-        validateRequired(j, {"maxCreditsPerTerm", "minCreditsPerTerm", "numTerms"}, context);
-
-        PlanConstraints constraints;
-
-        constraints.maxCreditsPerTerm = parsePositiveInt(j["maxCreditsPerTerm"], context + ".maxCreditsPerTerm");
-        constraints.minCreditsPerTerm = parsePositiveInt(j["minCreditsPerTerm"], context + ".minCreditsPerTerm");
-        constraints.numTerms = parsePositiveInt(j["numTerms"], context + ".numTerms");
-
-        // Các trường tùy chọn
-        constraints.enforceCoreqTogether = j.value("enforceCoreqTogether", true);
-        constraints.allowPartialLoads = j.value("allowPartialLoads", false);
-
-        // Kiểm tra logic
-        if (constraints.minCreditsPerTerm > constraints.maxCreditsPerTerm)
+        try
+        {
+            result.constraints.validate();
+        }
+        catch (const std::runtime_error &e)
         {
             throw LoadException(
-                "minCreditsPerTerm (" + std::to_string(constraints.minCreditsPerTerm) +
-                    ") không thể lớn hơn maxCreditsPerTerm (" + std::to_string(constraints.maxCreditsPerTerm) + ")",
-                "INVALID_CREDIT_RANGE",
-                context);
+                std::string(e.what()),
+                "INVALID_CONSTRAINTS",
+                context + ".constraints");
         }
-
-        return constraints;
+        return result;
     }
-
-    /**
-     * @brief Parse toàn bộ curriculum từ JSON
-     */
     Curriculum parseCurriculum(const nlohmann::json &j, const PlanConstraints &constraints, const std::string &context)
     {
         if (!j.is_array())
         {
             throw LoadException("Trường courses phải là mảng", "INVALID_TYPE", context);
         }
-
         Curriculum curriculum;
         std::unordered_set<std::string> courseIds;
-
-        // Lần 1: parse và kiểm tra trùng ID
+        std::vector<Course> parsedCourses;
         for (size_t i = 0; i < j.size(); ++i)
         {
             std::string courseContext = context + "[" + std::to_string(i) + "]";
             Course course = parseCourse(j[i], constraints, courseContext);
-
             if (courseIds.find(course.id) != courseIds.end())
             {
                 throw LoadException(
@@ -140,45 +107,36 @@ namespace planner
                     "DUPLICATE_COURSE_ID",
                     courseContext + ".id");
             }
-
             courseIds.insert(course.id);
-            curriculum.addCourse(std::move(course));
+            parsedCourses.push_back(std::move(course));
         }
-
-        // Lần 2: kiểm tra tham chiếu (prereq/coreq)
-        for (const auto &[id, course] : curriculum.courses)
+        for (const auto &course : parsedCourses)
         {
-            std::string courseContext = context + "[" + id + "]";
+            std::string courseContext = context + "[" + course.id + "]";
 
-            for (const auto &prereqId : course.prereq)
+            for (const auto &prereqId : course.prerequisite)
             {
-                if (curriculum.courses.find(prereqId) == curriculum.courses.end())
+                if (courseIds.find(prereqId) == courseIds.end())
                 {
                     throw LoadException(
                         "Prerequisite không tồn tại: " + prereqId,
                         "UNKNOWN_PREREQUISITE",
-                        courseContext + ".prereq");
+                        courseContext + ".prerequisite");
                 }
             }
-
-            for (const auto &coreqId : course.coreq)
+            for (const auto &coreqId : course.corequisite)
             {
-                if (curriculum.courses.find(coreqId) == curriculum.courses.end())
+                if (courseIds.find(coreqId) == courseIds.end())
                 {
                     throw LoadException(
                         "Corequisite không tồn tại: " + coreqId,
                         "UNKNOWN_COREQUISITE",
-                        courseContext + ".coreq");
+                        courseContext + ".corequisite");
                 }
             }
         }
-
         return curriculum;
     }
-
-    /**
-     * @brief Parse một môn học từ JSON
-     */
     Course parseCourse(const nlohmann::json &j, const PlanConstraints &constraints, const std::string &context)
     {
         validateRequired(j, {"id", "name", "credits"}, context);
@@ -186,20 +144,26 @@ namespace planner
         Course course;
         course.id = parseNonEmptyString(j["id"], context + ".id");
         course.name = parseNonEmptyString(j["name"], context + ".name");
-        course.credits = parsePositiveInt(j["credits"], context + ".credits");
 
-        course.prereq = parseStringArray(j, "prereq", context + ".prereq");
-        course.coreq = parseStringArray(j, "coreq", context + ".coreq");
-
-        if (j.contains("group"))
-            course.group = j["group"].get<std::string>();
-        if (j.contains("priority"))
-            course.priority = j["priority"].get<int>();
-
+        int credits = parsePositiveInt(j["credits"], context + ".credits");
+        if (credits > 65535)
+        {
+            throw LoadException(
+                "Số tín chỉ vượt quá giới hạn (65535): " + std::to_string(credits),
+                "CREDITS_OVERFLOW",
+                context + ".credits");
+        }
+        course.credits = static_cast<unsigned short>(credits);
+        course.prerequisite = parseStringArray(j, "prerequisite", context + ".prerequisite");
+        course.corequisite = parseStringArray(j, "corequisite", context + ".corequisite");
+        if (j.contains("elective_groups") && !j["elective_groups"].is_null())
+        {
+            course.elective_groups = j["elective_groups"].get<std::string>();
+        }
         if (j.contains("offered_terms"))
         {
-            course.offered_terms = parseIntArray(j, "offered_terms", context + ".offered_terms");
-            for (int term : course.offered_terms)
+            std::vector<int> terms = parseIntArray(j, "offered_terms", context + ".offered_terms");
+            for (int term : terms)
             {
                 if (term < 1 || term > constraints.numTerms)
                 {
@@ -209,13 +173,18 @@ namespace planner
                         "INVALID_OFFERED_TERM",
                         context + ".offered_terms");
                 }
+                if (term > 65535)
+                {
+                    throw LoadException(
+                        "Giá trị term vượt quá giới hạn (65535): " + std::to_string(term),
+                        "TERM_OVERFLOW",
+                        context + ".offered_terms");
+                }
+                course.offered_terms.insert(static_cast<unsigned short>(term));
             }
         }
-
         return course;
     }
-
-    // ====== Hàm tiện ích ======
 
     void validateRequired(const nlohmann::json &j, const std::vector<std::string> &requiredFields, const std::string &context)
     {
@@ -230,7 +199,6 @@ namespace planner
             }
         }
     }
-
     std::string parseNonEmptyString(const nlohmann::json &j, const std::string &context)
     {
         if (!j.is_string())
@@ -242,7 +210,6 @@ namespace planner
 
         return value;
     }
-
     int parsePositiveInt(const nlohmann::json &j, const std::string &context)
     {
         if (!j.is_number_integer())
@@ -255,7 +222,6 @@ namespace planner
                                 context);
         return value;
     }
-
     std::vector<std::string> parseStringArray(const nlohmann::json &j, const std::string &fieldName, const std::string &context)
     {
         std::vector<std::string> result;
@@ -272,7 +238,6 @@ namespace planner
         }
         return result;
     }
-
     std::vector<int> parseIntArray(const nlohmann::json &j, const std::string &fieldName, const std::string &context)
     {
         std::vector<int> result;
@@ -292,5 +257,4 @@ namespace planner
         }
         return result;
     }
-
 }
