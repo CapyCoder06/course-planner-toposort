@@ -1,33 +1,44 @@
 #include "TermAssigner.h"
 #include <stdexcept>
+#include <algorithm>
+using namespace std;
 
 PlanResult assignTermsGreedy(const CourseGraph& g,
                              const TopoResult& topo,
-                             const std::vector<int>& earliestTermByIdx,
-                             const std::vector<int>& creditsByIdx,
+                             const vector<int>& earliestTermByIdx,
+                             const vector<int>& creditsByIdx,
                              const PlanConstraints& constraints) {
     if (!topo.success) {
-        throw std::runtime_error("TermAssigner: topo failed (cycle present)");
+        throw runtime_error("TermAssigner: topo failed (cycle present)");
     }
     const int V = g.V;
     PlanResult res;
     res.termOfIdx.assign(V, 0);
 
     if ((int)earliestTermByIdx.size() != V || (int)creditsByIdx.size() != V) {
-        throw std::runtime_error("TermAssigner: size mismatch");
+        throw runtime_error("TermAssigner: size mismatch");
     }
     const int T = constraints.numTerms; // must be > 0
     if (T <= 0) {
-        throw std::runtime_error("TermAssigner: constraints.numTerms must be > 0");
+        throw runtime_error("TermAssigner: constraints.numTerms must be > 0");
     }
 
-    std::vector<int> termCredits(T + 1, 0); // 1..T
+    vector<int> termCredits(T + 1, 0); // 1..T
     int currentTerm = 1;
+    // ---- tie-break: sort candidates by earliestTerm (asc), then out-degree (desc), stable on topo ----
+    vector<int> outdeg(g.V, 0);
+    for (int u = 0; u < g.V; ++u) outdeg[u] = (int)g.adj[u].size();
 
+    vector<int> order = topo.order;
+    stable_sort(order.begin(), order.end(), [&](int a, int b) {
+        if (earliestTermByIdx[a] != earliestTermByIdx[b])
+            return earliestTermByIdx[a] < earliestTermByIdx[b];
+        return outdeg[a] > outdeg[b];
+    });
     for (int u : topo.order) {
         int credits = creditsByIdx[u];
         if (credits < 0) {
-            throw std::runtime_error("TermAssigner: negative credits");
+            throw runtime_error("TermAssigner: negative credits");
         }
 
         // earliest term enforced by prerequisites
@@ -60,6 +71,5 @@ PlanResult assignTermsGreedy(const CourseGraph& g,
             currentTerm = t; // stay on the same term for next items
         }
     }
-
     return res;
 }
