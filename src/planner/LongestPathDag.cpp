@@ -35,3 +35,23 @@ AC: Khi không xếp được, PlanResult có notes hữu ích.
 Truy vết đường lý do (đường dài nhất tới một môn), dùng để explain.
 
 AC: Trả chuỗi môn từ gốc → target khớp phụ thuộc dài nhất.*/
+#include "LongestPathDag.h"
+
+EarliestTerms computeEarliestTerms(const CourseGraph& g, const TopoResult& topo) {
+    if (!topo.success) {
+        throw std::runtime_error("EarliestTerms: graph has cycle (topo failed)");
+    }
+    const int V = g.V;
+    EarliestTerms res;
+    res.termByIdx.assign(V, 1); // sources & isolated nodes = 1 (policy)
+
+    // Relax edges in topological order: u -> v implies term[v] >= term[u] + 1
+    for (int u : topo.order) {
+        for (int v : g.adj[u]) {
+            if (res.termByIdx[v] < res.termByIdx[u] + 1) {
+                res.termByIdx[v] = res.termByIdx[u] + 1;
+            }
+        }
+    }
+    return res;
+}

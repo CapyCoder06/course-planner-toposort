@@ -1,7 +1,7 @@
 #include "TopoSort.h"
 #include <queue>
 using namespace std;
-TopoResult topoSort(const CourseGraph& topo){
+TopoResult topoSort(const CourseGraph& topo) {
     TopoResult res;
     const int V = topo.V;
     vector<int> indeg = topo.indeg;
