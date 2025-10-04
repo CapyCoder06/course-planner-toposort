@@ -28,28 +28,34 @@ protected:
         }
     }
 };
-
-// Kiểm tra thiếu trường cấp cao nhất
 TEST_F(LoaderKhongHopLeTest, ThieuTinChiMonHoc)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 28}, {"minCreditsPerTerm", 15}, {"numTerms", 8}}},
-        {"courses", {{
-                        {"id", "CS101"}, {"name", "Lập trình I"} // Thiếu "credits"
-                    }}}};
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}}}}};
 
     expectLoadException(j, "MISSING_FIELD");
 }
+TEST_F(LoaderKhongHopLeTest, ThieuIdMonHoc)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
+        {"courses", {{{"name", "Lập trình I"}, {"credits", 3}}}}};
 
-// Kiểm tra giá trị không hợp lệ của môn học
+    expectLoadException(j, "MISSING_FIELD");
+}
+TEST_F(LoaderKhongHopLeTest, ThieuTenMonHoc)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
+        {"courses", {{{"id", "CS101"}, {"credits", 3}}}}};
+    expectLoadException(j, "MISSING_FIELD");
+}
 TEST_F(LoaderKhongHopLeTest, IdMonHocRong)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{{"id", ""}, // Không hợp lệ: chuỗi rỗng
-                      {"name", "Lập trình I"},
-                      {"credits", 3}}}}};
-
+        {"courses", {{{"id", ""}, {"name", "Lập trình I"}, {"credits", 3}}}}};
     expectLoadException(j, "EMPTY_STRING");
 }
 
@@ -57,139 +63,153 @@ TEST_F(LoaderKhongHopLeTest, TenMonHocRong)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{{"id", "CS101"}, {"name", ""}, // Không hợp lệ: chuỗi rỗng
-                      {"credits", 3}}}}};
+        {"courses", {{{"id", "CS101"}, {"name", ""}, {"credits", 3}}}}};
 
     expectLoadException(j, "EMPTY_STRING");
 }
-
 TEST_F(LoaderKhongHopLeTest, TinChiKhongDuong)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{
-                        {"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 0} // Không hợp lệ: không dương
-                    }}}};
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 0}}}}};
 
     expectLoadException(j, "NON_POSITIVE_VALUE");
 }
-
 TEST_F(LoaderKhongHopLeTest, TinChiAm)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{
-                        {"id", "CS101"}, {"name", "Lập trình I"}, {"credits", -3} // Không hợp lệ: âm
-                    }}}};
-
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", -3}}}}};
     expectLoadException(j, "NON_POSITIVE_VALUE");
 }
-
-// Kiểm tra ID trùng lặp
 TEST_F(LoaderKhongHopLeTest, TrungIdMonHoc)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {{"id", "CS101"}, // ID trùng
-                                                                                  {"name", "Lập trình II"},
-                                                                                  {"credits", 3}}}}};
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {{"id", "CS101"}, {"name", "Lập trình II"}, {"credits", 3}}}}};
 
     expectLoadException(j, "DUPLICATE_COURSE_ID");
 }
-
-// Kiểm tra tiên quyết và đồng thời không tồn tại
 TEST_F(LoaderKhongHopLeTest, TienQuyetKhongTonTai)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {
-                                                                                     {"id", "CS102"}, {"name", "Lập trình II"}, {"credits", 3}, {"prereq", {"CS999"}} // Tiên quyết không tồn tại
-                                                                                 }}}};
+        {"courses", {
+                        {{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {{"id", "CS102"}, {"name", "Lập trình II"}, {"credits", 3}, {"prerequisite", {"CS999"}}} // Tiên quyết không tồn tại
+                    }}};
 
     expectLoadException(j, "UNKNOWN_PREREQUISITE");
 }
-
 TEST_F(LoaderKhongHopLeTest, DongThoiKhongTonTai)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {
-                                                                                     {"id", "PHYS101"}, {"name", "Vật lý I"}, {"credits", 4}, {"coreq", {"MATH999"}} // Đồng thời không tồn tại
-                                                                                 }}}};
+        {"courses", {
+                        {{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {{"id", "PHYS101"}, {"name", "Vật lý I"}, {"credits", 4}, {"corequisite", {"MATH999"}}} // Đồng thời không tồn tại
+                    }}};
 
     expectLoadException(j, "UNKNOWN_COREQUISITE");
 }
-
-// Kiểm tra offered_terms không hợp lệ
 TEST_F(LoaderKhongHopLeTest, HocKyKhongHopLeNhoHon)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{
-                        {"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}, {"offered_terms", {0, 1, 2}} // 0 không hợp lệ (hợp lệ: 1-8)
-                    }}}};
-
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}, {"offered_terms", {0, 1, 2}}}}}};
     expectLoadException(j, "INVALID_OFFERED_TERM");
 }
-
 TEST_F(LoaderKhongHopLeTest, HocKyKhongHopLeLonHon)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 4}}},
-        {"courses", {{
-                        {"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}, {"offered_terms", {1, 2, 5}} // 5 không hợp lệ (hợp lệ: 1-4)
-                    }}}};
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}, {"offered_terms", {1, 2, 5}}}}}};
 
     expectLoadException(j, "INVALID_OFFERED_TERM");
 }
-
-// Kiểm tra kiểu dữ liệu không hợp lệ
 TEST_F(LoaderKhongHopLeTest, IdKhongPhaiChuoi)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{{"id", 101}, // Không hợp lệ: phải là chuỗi
-                      {"name", "Lập trình I"},
-                      {"credits", 3}}}}};
+        {"courses", {{{"id", 101}, {"name", "Lập trình I"}, {"credits", 3}}}}};
 
     expectLoadException(j, "INVALID_TYPE");
 }
+TEST_F(LoaderKhongHopLeTest, TenKhongPhaiChuoi)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
+        {"courses", {{{"id", "CS101"}, {"name", 12345}, {"credits", 3}}}}};
 
+    expectLoadException(j, "INVALID_TYPE");
+}
 TEST_F(LoaderKhongHopLeTest, TinChiKhongPhaiSoNguyen)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{
-                        {"id", "CS101"}, {"name", "Lập trình I"}, {"credits", "3"} // Không hợp lệ: phải là số nguyên
-                    }}}};
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", "3"}}}}};
 
     expectLoadException(j, "INVALID_TYPE");
 }
-
 TEST_F(LoaderKhongHopLeTest, PrereqKhongPhaiMang)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {
-                                                                                     {"id", "CS102"}, {"name", "Lập trình II"}, {"credits", 3}, {"prereq", "CS101"} // Không hợp lệ: phải là mảng
-                                                                                 }}}};
+        {"courses", {
+                        {{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {{"id", "CS102"}, {"name", "Lập trình II"}, {"credits", 3}, {"prerequisite", "CS101"}} // Không hợp lệ: phải là mảng
+                    }}};
 
     expectLoadException(j, "INVALID_TYPE");
 }
+TEST_F(LoaderKhongHopLeTest, CoreqKhongPhaiMang)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
+        {"courses", {
+                        {{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}, {{"id", "PHYS101"}, {"name", "Vật lý I"}, {"credits", 4}, {"corequisite", "CS101"}} // Không hợp lệ: phải là mảng
+                    }}};
+    expectLoadException(j, "INVALID_TYPE");
+}
+TEST_F(LoaderKhongHopLeTest, OfferedTermsKhongPhaiMang)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
+        {"courses", {{
+                        {"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}, {"offered_terms", 1} // Không hợp lệ: phải là mảng
+                    }}}};
 
+    expectLoadException(j, "INVALID_TYPE");
+}
 TEST_F(LoaderKhongHopLeTest, CoursesKhongPhaiMang)
 {
     json j = {
         {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 8}}},
-        {"courses", {// Không hợp lệ: phải là mảng, không phải object
-                     {"id", "CS101"},
-                     {"name", "Lập trình I"},
-                     {"credits", 3}}}};
+        {"courses", {{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}}};
 
     expectLoadException(j, "INVALID_TYPE");
 }
+TEST_F(LoaderKhongHopLeTest, ThieuTruongConstraints)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}}},
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}}}};
 
-// Kiểm tra file không tồn tại
+    expectLoadException(j, "MISSING_FIELD");
+}
+TEST_F(LoaderKhongHopLeTest, MaxCreditsNhoHonMinCredits)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 10}, {"minCreditsPerTerm", 15}, {"numTerms", 8}}},
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}}}};
+
+    expectLoadException(j, "INVALID_CONSTRAINT");
+}
+TEST_F(LoaderKhongHopLeTest, NumTermsKhongDuong)
+{
+    json j = {
+        {"constraints", {{"maxCreditsPerTerm", 18}, {"minCreditsPerTerm", 12}, {"numTerms", 0}}},
+        {"courses", {{{"id", "CS101"}, {"name", "Lập trình I"}, {"credits", 3}}}}};
+
+    expectLoadException(j, "NON_POSITIVE_VALUE");
+}
 TEST_F(LoaderKhongHopLeTest, FileKhongTonTai)
 {
     try
