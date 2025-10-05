@@ -24,6 +24,7 @@ add_executable(planner_tests
   tests/loader_test.cpp
   tests/loader_invalid_test.cpp
   tests/loader_valid_test.cpp
+  tests/coreq_electives_test.cpp
 )
 
 target_link_libraries(planner_tests PRIVATE planner GTest::gtest_main)

@@ -1,0 +1,108 @@
+{
+  "constraints": {
+    "numTerms": 8,
+    "maxcredits": 18,
+    "mincredits": 12,
+    "enforceCoreqTogether": false,
+    "offered_terms": []
+  },
+  "courses": [
+    {
+      "id": "CS101",
+      "name": "Programming Fundamentals",
+      "credits": 3,
+      "prereq": [],
+      "coreq": []
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures",
+      "credits": 3,
+      "prereq": ["CS101"],
+      "coreq": []
+    },
+    {
+      "id": "CS301",
+      "name": "Algorithms",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "coreq": []
+    },
+    {
+      "id": "WEB101",
+      "name": "Web Development",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "coreq": [],
+      "elective_groups": "TECH_ELECTIVES"
+    },
+    {
+      "id": "MOBILE101",
+      "name": "Mobile Development",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "coreq": [],
+      "elective_groups": "TECH_ELECTIVES"
+    },
+    {
+      "id": "AI101",
+      "name": "Artificial Intelligence",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "coreq": [],
+      "elective_groups": "TECH_ELECTIVES"
+    },
+    {
+      "id": "CLOUD101",
+      "name": "Cloud Computing",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "coreq": [],
+      "elective_groups": "TECH_ELECTIVES"
+    },
+    {
+      "id": "SECURITY101",
+      "name": "Cybersecurity",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "coreq": [],
+      "elective_groups": "TECH_ELECTIVES"
+    },
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "credits": 4,
+      "prereq": [],
+      "coreq": [],
+      "elective_groups": "MATH_ELECTIVES"
+    },
+    {
+      "id": "STAT101",
+      "name": "Statistics",
+      "credits": 3,
+      "prereq": [],
+      "coreq": [],
+      "elective_groups": "MATH_ELECTIVES"
+    },
+    {
+      "id": "DISCRETE",
+      "name": "Discrete Mathematics",
+      "credits": 3,
+      "prereq": [],
+      "coreq": [],
+      "elective_groups": "MATH_ELECTIVES"
+    }
+  ],
+  "elective_groups": [
+    {
+      "group_id": "TECH_ELECTIVES",
+      "required_count": 2,
+      "description": "Choose 2 technical electives"
+    },
+    {
+      "group_id": "MATH_ELECTIVES",
+      "required_count": 2,
+      "description": "Choose 2 math electives"
+    }
+  ]
+}

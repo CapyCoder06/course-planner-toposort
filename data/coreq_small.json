@@ -1,0 +1,60 @@
+{
+  "constraints": {
+    "numTerms": 6,
+    "maxcredits": 18,
+    "mincredits": 12,
+    "enforceCoreqTogether": true,
+    "offered_terms": []
+  },
+  "courses": [
+    {
+      "id": "CS101",
+      "name": "Programming Fundamentals",
+      "credits": 3,
+      "prereq": [],
+      "coreq": ["LAB101"]
+    },
+    {
+      "id": "LAB101",
+      "name": "Programming Lab",
+      "credits": 1,
+      "prereq": [],
+      "coreq": ["CS101"]
+    },
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "credits": 4,
+      "prereq": [],
+      "coreq": []
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures",
+      "credits": 3,
+      "prereq": ["CS101"],
+      "coreq": ["LAB201"]
+    },
+    {
+      "id": "LAB201",
+      "name": "Data Structures Lab",
+      "credits": 1,
+      "prereq": ["LAB101"],
+      "coreq": ["CS201"]
+    },
+    {
+      "id": "MATH201",
+      "name": "Calculus II",
+      "credits": 4,
+      "prereq": ["MATH101"],
+      "coreq": []
+    },
+    {
+      "id": "CS301",
+      "name": "Algorithms",
+      "credits": 3,
+      "prereq": ["CS201", "MATH201"],
+      "coreq": []
+    }
+  ]
+}
