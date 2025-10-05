@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include "../io/Loader.h"
+#include "../io/Writer.h"
 #include "../graph/CourseGraph.h"
 #include "../graph/TopoSort.h"
 #include "../graph/CycleDiagnosis.h"
@@ -36,7 +37,11 @@ void printUsage(const char *progName)
          << "  --min-cred <N>           Override min credits per term\n"
          << "  --enforce-coreq <bool>   Override coreq enforcement (true/false)\n"
          << "  -v, --verbose            Verbose output\n"
-         << "  -h, --help               Show this help\n";
+         << "  -h, --help               Show this help\n"
+         << "\n"
+         << "Output formats (auto-detected by extension):\n"
+         << "  .json - JSON format (round-trip compatible)\n"
+         << "  .md   - Markdown format (human-readable)\n";
 }
 
 CliOptions parseArgs(int argc, char *argv[])
@@ -133,39 +138,36 @@ void applyOverrides(PlanConstraints &constraints, const CliOptions &opts)
     }
 }
 
-void printPlanSummary(const PlanResult &result, const CourseGraph &graph,
-                      const PlanConstraints &constraints)
+void printPlanSummary(const EnhancedPlanResult &result)
 {
     cout << "\n========== PLAN SUMMARY ==========\n";
-    cout << "Feasible: " << (result.ok ? "YES" : "NO") << "\n\n";
+    cout << "Feasible: " << (result.feasible ? "YES" : "NO") << "\n";
+    cout << "Total Terms Used: " << result.totalTermsUsed
+         << " / " << result.constraints.numTerms << "\n";
+    cout << "Total Credits: " << result.totalCredits << "\n\n";
 
-    if (result.ok)
+    if (!result.terms.empty())
     {
-        map<int, vector<string>> termCourses;
-        map<int, int> termCredits;
-
-        for (size_t idx = 0; idx < result.termOfIdx.size(); ++idx)
+        for (const auto &term : result.terms)
         {
-            int term = result.termOfIdx[idx];
-            if (term > 0)
+            cout << "Term " << term.termNumber << " (" << term.totalCredits << " credits):\n";
+            for (size_t i = 0; i < term.courseIds.size(); ++i)
             {
-                string courseId = graph.idxToId.at(idx);
-                termCourses[term].push_back(courseId);
-            }
-        }
-
-        cout << "Total Terms Used: " << termCourses.size() << "\n";
-        cout << "Max Terms Available: " << constraints.numTerms << "\n\n";
-
-        for (const auto &[term, courses] : termCourses)
-        {
-            cout << "Term " << term << " (" << courses.size() << " courses):\n";
-            for (const auto &courseId : courses)
-            {
-                cout << "  - " << courseId << "\n";
+                cout << "  - " << term.courseIds[i] << " ("
+                     << term.courseCredits[i] << " cr)\n";
             }
             cout << "\n";
         }
+    }
+
+    if (!result.warnings.empty())
+    {
+        cout << "========== WARNINGS ==========\n";
+        for (const auto &warning : result.warnings)
+        {
+            cout << "⚠️  " << warning << "\n";
+        }
+        cout << "\n";
     }
 
     if (!result.notes.empty())
@@ -200,6 +202,13 @@ void printDetailedHints(const vector<HintNote> &hints)
         }
     }
     cout << "\n";
+}
+
+bool endsWith(const string &str, const string &suffix)
+{
+    if (str.length() < suffix.length())
+        return false;
+    return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
 }
 
 int main(int argc, char *argv[])
@@ -265,7 +274,13 @@ int main(int argc, char *argv[])
             creditsByIdx,
             loadResult.constraints);
 
-        printPlanSummary(planResult, graph, loadResult.constraints);
+        auto enhancedResult = Writer::enhance(
+            planResult,
+            graph,
+            loadResult.curriculum,
+            loadResult.constraints);
+
+        printPlanSummary(enhancedResult);
 
         if (!planResult.ok)
         {
@@ -278,10 +293,27 @@ int main(int argc, char *argv[])
 
             printDetailedHints(hints);
         }
+
         if (!opts.outputFile.empty())
         {
-            cout << "Output file specified: " << opts.outputFile << "\n";
-            cout << "(Writer not yet implemented - M7)\n";
+            cout << "Writing output to: " << opts.outputFile << "\n";
+
+            if (endsWith(opts.outputFile, ".json"))
+            {
+                Writer::writeJson(enhancedResult, opts.outputFile);
+                cout << "JSON output written successfully\n";
+            }
+            else if (endsWith(opts.outputFile, ".md"))
+            {
+                Writer::writeMarkdown(enhancedResult, opts.outputFile);
+                cout << "Markdown output written successfully\n";
+            }
+            else
+            {
+                cerr << "Warning: Unknown output format. Use .json or .md extension.\n";
+                cerr << "Defaulting to JSON format.\n";
+                Writer::writeJson(enhancedResult, opts.outputFile + ".json");
+            }
         }
 
         return planResult.ok ? 0 : 1;

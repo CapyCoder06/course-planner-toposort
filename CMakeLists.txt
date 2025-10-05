@@ -10,6 +10,7 @@ add_library(planner
 )
 target_include_directories(planner PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/src/model)
+target_include_directories(course_planner PRIVATE src src/model)
 
 # GoogleTest
 include(FetchContent)
@@ -20,13 +21,16 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(planner_tests
-  tests/smoke_test.cpp
-  tests/loader_test.cpp
-  tests/loader_invalid_test.cpp
-  tests/loader_valid_test.cpp
-  tests/coreq_electives_test.cpp
-  tests/assigner_quota_test.cpp
-  tests/offered_terms_hints_test.cpp
+  tests/writer_explain_test.cpp
+  src/io/Loader.cpp
+  src/io/Writer.cpp
+  src/graph/CourseGraph.cpp
+  src/graph/TopoSort.cpp
+  src/graph/CycleDiagnosis.cpp
+  src/planner/LongestPathDag.cpp
+  src/planner/TermAssigner.cpp
+  src/planner/Hints.cpp
+  src/model/Curriculum.cpp
 )
 
 target_link_libraries(planner_tests PRIVATE planner GTest::gtest_main)
