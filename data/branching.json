@@ -31,13 +31,13 @@
     },
     {
       "id": "CS101",
-      "name": "Programming Fundamentals",
+      "name": "Introduction to programming",
       "credits": 3,
       "prereq": []
     },
     {
       "id": "CS201",
-      "name": "Data Structures",
+      "name": "Data Structures and Algorithms",
       "credits": 3,
       "prereq": ["CS101"]
     },

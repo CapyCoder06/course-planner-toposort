@@ -1,0 +1,52 @@
+{
+  "constraints": {
+    "maxCreditsPerTerm": 18,
+    "minCreditsPerTerm": 12,
+    "numTerms": 8,
+    "enforceCoreqTogether": true
+  },
+  "courses": [
+    {
+      "id": "CS101",
+      "name": "Introduction to Programming",
+      "credits": 3,
+      "prereq": []
+    },
+    {
+      "id": "CS102",
+      "name": "Programming techniques",
+      "credits": 3,
+      "prereq": ["CS101"]
+    },
+    {
+      "id": "CS201",
+      "name": "Data structures and Algorithms",
+      "credits": 3,
+      "prereq": ["CS102"]
+    },
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "credits": 3,
+      "prereq": []
+    },
+    {
+      "id": "PHYS101",
+      "name": "Physics I",
+      "credits": 4,
+      "prereq": []
+    },
+    {
+      "id": "ENG101",
+      "name": "Academic English I",
+      "credits": 3,
+      "prereq": []
+    },
+    {
+      "id": "ENG102",
+      "name": "Academic English II",
+      "credits": 3,
+      "prereq": ["ENG101"]
+    }
+  ]
+}

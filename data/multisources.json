@@ -1,0 +1,52 @@
+{
+  "constraints": {
+    "maxCreditsPerTerm": 20,
+    "minCreditsPerTerm": 10,
+    "numTerms": 6,
+    "enforceCoreqTogether": true
+  },
+  "courses": [
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "credits": 4,
+      "prereq": []
+    },
+    {
+      "id": "CS101",
+      "name": "Introduction to Programming",
+      "credits": 3,
+      "prereq": []
+    },
+    {
+      "id": "PHYS101",
+      "name": "Physics I",
+      "credits": 4,
+      "prereq": ["MATH101"]
+    },
+    {
+      "id": "MATH201",
+      "name": "Calculus II",
+      "credits": 4,
+      "prereq": ["MATH101"]
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures and Algorithms",
+      "credits": 3,
+      "prereq": ["CS101"]
+    },
+    {
+      "id": "PHYS201",
+      "name": "Physics II",
+      "credits": 4,
+      "prereq": ["PHYS101", "MATH101"]
+    },
+    {
+      "id": "CS301",
+      "name": "Software Engineering",
+      "credits": 3,
+      "prereq": ["CS202"]
+    }
+  ]
+}
