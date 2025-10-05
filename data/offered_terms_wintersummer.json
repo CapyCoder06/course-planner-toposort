@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "name": "Winter/Summer Offered Terms Sample",
+    "description": "Dataset with courses restricted to specific terms (simulating fall/spring/winter/summer)",
+    "version": "1.0"
+  },
+  "constraints": {
+    "numTerms": 8,
+    "maxCreditsPerTerm": 18,
+    "minCreditsPerTerm": 12,
+    "enforceCoreqTogether": true
+  },
+  "courses": [
+    {
+      "id": "CS101",
+      "name": "Introduction to Programming",
+      "credits": 3,
+      "prereq": [],
+      "offered_terms": [1, 2, 5, 6]
+    },
+    {
+      "id": "CS102",
+      "name": "Programming Techniques",
+      "credits": 3,
+      "prereq": ["CS101"],
+      "offered_terms": [2, 3, 6, 7]
+    },
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "credits": 4,
+      "prereq": [],
+      "offered_terms": [1, 2, 5, 6]
+    },
+    {
+      "id": "MATH201",
+      "name": "Calculus II",
+      "credits": 4,
+      "prereq": ["MATH101"],
+      "offered_terms": [2, 3, 6, 7]
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures",
+      "credits": 3,
+      "prereq": ["CS102"],
+      "offered_terms": [1, 2, 5, 6]
+    },
+    {
+      "id": "CS301",
+      "name": "Algorithms",
+      "credits": 3,
+      "prereq": ["CS201", "MATH201"],
+      "offered_terms": [3, 7]
+    },
+    {
+      "id": "WINTER_INT",
+      "name": "Winter Intensive Course",
+      "credits": 3,
+      "prereq": ["CS101"],
+      "offered_terms": [4]
+    },
+    {
+      "id": "SUMMER_INT",
+      "name": "Summer Intensive Course",
+      "credits": 3,
+      "prereq": ["CS102"],
+      "offered_terms": [8]
+    },
+    {
+      "id": "PHYS101",
+      "name": "Physics I",
+      "credits": 4,
+      "prereq": ["MATH101"],
+      "offered_terms": [1, 2, 5, 6]
+    },
+    {
+      "id": "PHYS201",
+      "name": "Physics II",
+      "credits": 4,
+      "prereq": ["PHYS101", "MATH201"],
+      "offered_terms": [2, 3, 6, 7]
+    },
+    {
+      "id": "CS_ELEC1",
+      "name": "Web Development",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "offered_terms": [1, 5]
+    },
+    {
+      "id": "CS_ELEC2",
+      "name": "Mobile Development",
+      "credits": 3,
+      "prereq": ["CS201"],
+      "offered_terms": [3, 7]
+    },
+    {
+      "id": "CAPSTONE",
+      "name": "Senior Capstone Project",
+      "credits": 6,
+      "prereq": ["CS301"],
+      "offered_terms": [3, 7]
+    }
+  ]
+}
