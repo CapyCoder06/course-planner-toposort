@@ -4,68 +4,68 @@
 
 using namespace std;
 
+// chọn môn tự chọn dựa vào nhóm + độ ưu tiên
 ElectiveResult ElectiveResolver::resolve(
     const vector<ElectiveGroup>& groups,
     const unordered_map<string, int>& creditTable,
     const unordered_map<string, vector<string>>& prereqTable
 ) {
     ElectiveResult result;
+    result.feasible = true;
 
-    for (const ElectiveGroup& group : groups) {
+    // duyệt qua từng group để chọn môn
+    for (const auto& group : groups) {
         vector<string> pool = group.courseIds;
 
+        // sắp xếp: ưu tiên cao hơn trước, nếu bằng thì lấy môn ít tín chỉ hơn
         sort(pool.begin(), pool.end(), [&](const string& a, const string& b) {
-            int pa = 0, pb = 0;
-            if (group.coursePriority.find(a) != group.coursePriority.end())
-                pa = group.coursePriority.at(a);
-            if (group.coursePriority.find(b) != group.coursePriority.end())
-                pb = group.coursePriority.at(b);
-
+            int pa = group.coursePriority.count(a) ? group.coursePriority.at(a) : 0;
+            int pb = group.coursePriority.count(b) ? group.coursePriority.at(b) : 0;
             if (pa != pb) return pa > pb;
 
-            int ca = 0, cb = 0;
-            if (creditTable.find(a) != creditTable.end()) ca = creditTable.at(a);
-            if (creditTable.find(b) != creditTable.end()) cb = creditTable.at(b);
-
-            return ca < cb; 
+            int ca = creditTable.count(a) ? creditTable.at(a) : 0;
+            int cb = creditTable.count(b) ? creditTable.at(b) : 0;
+            return ca < cb;
         });
 
+        // nếu không đủ số lượng môn thì coi như fail
         if ((int)pool.size() < group.requiredCount) {
             result.feasible = false;
-
             ostringstream oss;
-            oss << "Group " << group.groupId << " only has "
-                << pool.size() << " courses, need " << group.requiredCount;
-            result.message = oss.str();
-
+            oss << "Group " << group.groupId << " chỉ có "
+                << pool.size() << " môn, cần " << group.requiredCount;
+            result.message += oss.str();
             return result;
         }
 
+        // lấy mấy môn đầu trong danh sách đã sort
         for (int i = 0; i < group.requiredCount; ++i) {
             result.selectedCourses.insert(pool[i]);
         }
     }
 
+    // kiểm tra xem có thiếu môn tiên quyết nào không
     if (!validatePrerequisites(result.selectedCourses, prereqTable)) {
         result.feasible = false;
-        result.message = "Missing prerequisite(s) for chosen electives.";
+        result.message += "Thiếu môn tiên quyết.";
     }
 
     return result;
 }
 
+// check prerequisite: nếu chọn 1 môn mà chưa có môn trước nó thì báo lỗi
 bool ElectiveResolver::validatePrerequisites(
     const unordered_set<string>& chosen,
     const unordered_map<string, vector<string>>& prereqTable
 ) {
-    for (const pair<const string, vector<string>>& entry : prereqTable) {
+    for (const auto& entry : prereqTable) {
         const string& course = entry.first;
-        const vector<string>& prereqs = entry.second;
+        const auto& prereqs = entry.second;
 
-        if (chosen.find(course) != chosen.end()) {
-            for (const string& pre : prereqs) {
-                if (chosen.find(pre) == chosen.end()) {
-                    return false; 
+        if (chosen.count(course)) {
+            for (const auto& pre : prereqs) {
+                if (!chosen.count(pre)) {
+                    return false; // thiếu 1 môn là fail luôn
                 }
             }
         }
