@@ -255,7 +255,7 @@ namespace planner
             md << "```\n";
 
         constexpr int BAR_WIDTH = 40;
-        static constexpr const char* BLOCK = "\xE2\x96\x88"; // UTF-8 cho '█'
+        static constexpr const char* BLOCK = "\xE2\x96\x88"; 
 
         int maxCredits = 0;
         for (const auto& term : result.terms) {

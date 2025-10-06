@@ -1,0 +1,445 @@
+{
+  "feasible": true,
+  "summary": {
+    "generated_from": "sample_small.json (balanced, all courses included)",
+    "terms": 8,
+    "minCreditsPerTerm": 15,
+    "maxCreditsPerTerm": 28
+  },
+  "terms": [
+    {
+      "index": 1,
+      "courses": [
+        {
+          "id": "MATH132401E",
+          "name": "Calculus 1",
+          "credits": 3
+        },
+        {
+          "id": "INPR130285E",
+          "name": "Introduction to programming",
+          "credits": 3
+        },
+        {
+          "id": "PHYS130502E",
+          "name": "Physics 1",
+          "credits": 3
+        },
+        {
+          "id": "INIT130185E",
+          "name": "Introduction to Information Technology",
+          "credits": 3
+        },
+        {
+          "id": "GELA220405E",
+          "name": "General Law",
+          "credits": 2
+        },
+        {
+          "id": "PHED110130",
+          "name": "Physical Education 1",
+          "credits": 1
+        },
+        {
+          "id": "BADM112330",
+          "name": "Cầu lông",
+          "credits": 1
+        },
+        {
+          "id": "VOLL112230",
+          "name": "Bóng chuyền",
+          "credits": 1
+        },
+        {
+          "id": "ACEN340535E",
+          "name": "Academic English 1",
+          "credits": 4
+        }
+      ],
+      "credits": 21
+    },
+    {
+      "index": 2,
+      "courses": [
+        {
+          "id": "MATH132501E",
+          "name": "Calculus 2",
+          "credits": 3
+        },
+        {
+          "id": "MATH143001E",
+          "name": "Linear Algebra and Algebraic Structure",
+          "credits": 4
+        },
+        {
+          "id": "OOPR230279E",
+          "name": "Object-Oriented Programming",
+          "credits": 3
+        },
+        {
+          "id": "PRTE230385E",
+          "name": "Programming techniques",
+          "credits": 3
+        },
+        {
+          "id": "PHYS111202E",
+          "name": "Physics 1 - Laboratory",
+          "credits": 1
+        },
+        {
+          "id": "GEEC220105E",
+          "name": "General Economics",
+          "credits": 2
+        },
+        {
+          "id": "ACEN340635E",
+          "name": "Academic English 2",
+          "credits": 4
+        }
+      ],
+      "credits": 20
+    },
+    {
+      "index": 3,
+      "courses": [
+        {
+          "id": "DASA230179E",
+          "name": "Data Structures and Algorithms",
+          "credits": 3
+        },
+        {
+          "id": "DIGR230485E",
+          "name": "Discrete Mathematics and Graph Theory",
+          "credits": 3
+        },
+        {
+          "id": "DBSY230184E",
+          "name": "Database Systems",
+          "credits": 3
+        },
+        {
+          "id": "CAAL230180E",
+          "name": "Computer Architecture and Assembly Language",
+          "credits": 3
+        },
+        {
+          "id": "EEEN231780E",
+          "name": "Basic Electronics",
+          "credits": 2
+        },
+        {
+          "id": "PRBE214262E",
+          "name": "Practice Basic Electronics",
+          "credits": 1
+        },
+        {
+          "id": "INMA220305E",
+          "name": "Introduction to Management",
+          "credits": 2
+        },
+        {
+          "id": "ACEN440735E",
+          "name": "Academic English 3",
+          "credits": 4
+        }
+      ],
+      "credits": 21
+    },
+    {
+      "index": 4,
+      "courses": [
+        {
+          "id": "DBMS330284E",
+          "name": "Database Management Systems",
+          "credits": 3
+        },
+        {
+          "id": "OPSY330280E",
+          "name": "Operating Systems",
+          "credits": 3
+        },
+        {
+          "id": "NEES330380E",
+          "name": "Networking Essentials",
+          "credits": 3
+        },
+        {
+          "id": "ARIN330585E",
+          "name": "Artificial Intelligence",
+          "credits": 3
+        },
+        {
+          "id": "WEPR330479E",
+          "name": "Web Programming",
+          "credits": 3
+        },
+        {
+          "id": "MATH132901E",
+          "name": "Mathematical Statistics for Engineers",
+          "credits": 3
+        },
+        {
+          "id": "ACEN440835E",
+          "name": "Academic English 4",
+          "credits": 4
+        }
+      ],
+      "credits": 22
+    },
+    {
+      "index": 5,
+      "courses": [
+        {
+          "id": "OOSE330679E",
+          "name": "Object-Oriented Software Engineering",
+          "credits": 3
+        },
+        {
+          "id": "DEPA330879E",
+          "name": "Design Patterns",
+          "credits": 3
+        },
+        {
+          "id": "INSE330380E",
+          "name": "Information Security",
+          "credits": 3
+        },
+        {
+          "id": "NPRO430980E",
+          "name": "Network Programming",
+          "credits": 3
+        },
+        {
+          "id": "ADNT330580E",
+          "name": "Advanced Networking Technology",
+          "credits": 3
+        },
+        {
+          "id": "PROJ215879E",
+          "name": "IT Project",
+          "credits": 1
+        },
+        {
+          "id": "HCIN431979E",
+          "name": "Human-Computer Interaction",
+          "credits": 3
+        }
+      ],
+      "credits": 19
+    },
+    {
+      "index": 6,
+      "courses": [
+        {
+          "id": "SOTE431079E",
+          "name": "Software Testing",
+          "credits": 3
+        },
+        {
+          "id": "MTSE431179E",
+          "name": "Modern Technologies on Software Engineering",
+          "credits": 3
+        },
+        {
+          "id": "WIPR230579E",
+          "name": "Windows Programming",
+          "credits": 3
+        },
+        {
+          "id": "DBSE431284E",
+          "name": "Database Security",
+          "credits": 3
+        },
+        {
+          "id": "MOPR331279E",
+          "name": "Programming for Mobile Devices",
+          "credits": 3
+        },
+        {
+          "id": "SEOC431884E",
+          "name": "Search Engine Optimization",
+          "credits": 3
+        },
+        {
+          "id": "CLCO332779E",
+          "name": "Cloud Computing",
+          "credits": 3
+        }
+      ],
+      "credits": 21
+    },
+    {
+      "index": 7,
+      "courses": [
+        {
+          "id": "POSE431479E",
+          "name": "Project on Software Engineering",
+          "credits": 3
+        },
+        {
+          "id": "POCN431280E",
+          "name": "Project on Computer Network & Network Security",
+          "credits": 3
+        },
+        {
+          "id": "CNDE430780E",
+          "name": "Computer Networks Design",
+          "credits": 3
+        },
+        {
+          "id": "NSEC430880E",
+          "name": "Networks Security",
+          "credits": 3
+        },
+        {
+          "id": "ISAD330384E",
+          "name": "Information Systems Analysis and Design",
+          "credits": 3
+        },
+        {
+          "id": "DAMI330484E",
+          "name": "Data Mining",
+          "credits": 3
+        },
+        {
+          "id": "BDES333877E",
+          "name": "Big Data Essentials",
+          "credits": 3
+        },
+        {
+          "id": "MALE431085E",
+          "name": "Machine Learning",
+          "credits": 3
+        }
+      ],
+      "credits": 24
+    },
+    {
+      "index": 8,
+      "courses": [
+        {
+          "id": "ITPM430884E",
+          "name": "Information Technology Project Management",
+          "credits": 3
+        },
+        {
+          "id": "ITIN441085E",
+          "name": "Internship",
+          "credits": 4
+        },
+        {
+          "id": "ENTW611038E",
+          "name": "English for Thesis Writing",
+          "credits": 1
+        },
+        {
+          "id": "GRPR471979E",
+          "name": "Capstone project",
+          "credits": 7
+        }
+      ],
+      "credits": 15
+    }
+  ],
+  "notes": [
+    "Balanced plan: all courses from sample_small.json are included and prerequisites are respected where specified.",
+    {
+      "minCreditsPerTerm": 15,
+      "maxCreditsPerTerm": 28,
+      "numTerms": 8
+    },
+    "English courses distributed across Terms 1–4; internship & capstone placed in Term 8."
+  ],
+  "explain": [
+    {
+      "courseId": "OOPR230279E",
+      "chain": [
+        "INPR130285E"
+      ]
+    },
+    {
+      "courseId": "PRTE230385E",
+      "chain": [
+        "INPR130285E"
+      ]
+    },
+    {
+      "courseId": "DASA230179E",
+      "chain": [
+        "INPR130285E",
+        "PRTE230385E"
+      ]
+    },
+    {
+      "courseId": "PHYS111202E",
+      "chain": [
+        "PHYS130502E"
+      ]
+    },
+    {
+      "courseId": "PRBE214262E",
+      "chain": [
+        "EEEN231780E"
+      ]
+    },
+    {
+      "courseId": "DBMS330284E",
+      "chain": [
+        "DBSY230184E"
+      ]
+    },
+    {
+      "courseId": "OPSY330280E",
+      "chain": [
+        "CAAL230180E"
+      ]
+    },
+    {
+      "courseId": "WIPR230579E",
+      "chain": [
+        "INPR130285E",
+        "OOPR230279E",
+        "DBMS330284E"
+      ]
+    },
+    {
+      "courseId": "OOSE330679E",
+      "chain": [
+        "OOPR230279E"
+      ]
+    },
+    {
+      "courseId": "SOTE431079E",
+      "chain": [
+        "OOSE330679E"
+      ]
+    },
+    {
+      "courseId": "NPRO430980E",
+      "chain": [
+        "NEES330380E",
+        "INPR130285E"
+      ]
+    },
+    {
+      "courseId": "ADNT330580E",
+      "chain": [
+        "NEES330380E"
+      ]
+    },
+    {
+      "courseId": "CNDE430780E",
+      "chain": [
+        "NEES330380E",
+        "ADNT330580E"
+      ]
+    },
+    {
+      "courseId": "NSEC430880E",
+      "chain": [
+        "NEES330380E",
+        "INSE330380E"
+      ]
+    }
+  ]
+}
