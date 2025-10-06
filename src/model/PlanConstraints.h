@@ -6,8 +6,8 @@ using namespace std;
 struct PlanConstraints 
 {
     int numTerms;
-    int maxcredits;
-    int mincredits;
+    int maxCreditsPerTerm;
+    int minCreditsPerTerm;
     bool enforceCoreqTogether;
     vector<int> offered_terms;
 
