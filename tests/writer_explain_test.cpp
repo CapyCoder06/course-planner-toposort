@@ -99,8 +99,8 @@ TEST_F(WriterTest, JsonRoundTrip)
     EXPECT_EQ(loaded.totalCredits, original.totalCredits);
     EXPECT_EQ(loaded.terms.size(), original.terms.size());
     EXPECT_EQ(loaded.constraints.numTerms, original.constraints.numTerms);
-    EXPECT_EQ(loaded.constraints.maxcredits,
-              original.constraints.maxcredits);
+    EXPECT_EQ(loaded.constraints.maxCreditsPerTerm,
+              original.constraints.maxCreditsPerTerm);
 
     for (size_t i = 0; i < loaded.terms.size(); ++i)
     {

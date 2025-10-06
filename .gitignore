@@ -1,33 +1,90 @@
-# C++
-/build/
-/out/
-/cmake-build-*/
-
-# VSCode / IDE
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
 .vscode/
-*.user
+.vscode-test/
+.idea/
+*.iml
 *.log
 
-# Node
+# =========================
+# C/C++ (CMake, MSVC, MinGW, Ninja)
+# =========================
+# Build dirs (local)
+build/
+build_*/
+out/
+cmake-build-*/
+# CMake cache/artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+Testing/
+Makefile
+# Tooling DB (ignore if bạn không dùng)
+compile_commands.json
+
+# Compiled objects & libs
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exp
+*.idb
+*.pdb
+*.ilk
+*.rsp
+
+# Coverage & dep files
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
+*.d
+
+# Third-party fetched by CMake (e.g., GoogleTest via FetchContent)
+_deps/
+
+# =========================
+# UI (Vite/React/TS)
+# =========================
 ui/node_modules/
 ui/dist/
+ui/dist-ssr/
 ui/.vite/
+ui/.cache/
+ui/.eslintcache
+# Env files (chỉ ignore nếu không commit .env)
+ui/.env.local
+ui/.env.*.local
 
-# System
-.DS_Store
-Thumbs.db
-# UI build/cache
-/ui/node_modules/
-/ui/dist/
-/ui/.vite/
+# =========================
+# Misc
+# =========================
+# Windows executables & installers
+*.exe
+*.msi
+*.msix
+*.msm
+*.msp
 
-# C++ build
-/build/
-/out/
-/cmake-build-*/
-
-# Editor / system
-.vscode/
-.DS_Store
-Thumbs.db
-*.log
+# Archives / temp
+*.zip
+*.7z
+*.tar
+*.gz
+*.tgz
+*.bak
+*.tmp
+*.temp
+*.swp

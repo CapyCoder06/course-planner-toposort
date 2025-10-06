@@ -119,15 +119,15 @@ void applyOverrides(PlanConstraints &constraints, const CliOptions &opts)
     if (opts.maxCredits > 0)
     {
         cout << "Override: maxCreditsPerTerm = " << opts.maxCredits
-             << " (was " << constraints.maxcredits << ")\n";
-        constraints.maxcredits = opts.maxCredits;
+             << " (was " << constraints.maxCreditsPerTerm << ")\n";
+        constraints.maxCreditsPerTerm = opts.maxCredits;
     }
 
     if (opts.minCredits > 0)
     {
         cout << "Override: minCreditsPerTerm = " << opts.minCredits
-             << " (was " << constraints.mincredits << ")\n";
-        constraints.mincredits = opts.minCredits;
+             << " (was " << constraints.minCreditsPerTerm << ")\n";
+        constraints.minCreditsPerTerm = opts.minCredits;
     }
 
     if (opts.hasEnforceCoreqOverride)
@@ -222,9 +222,9 @@ int main(int argc, char *argv[])
 
         applyOverrides(loadResult.constraints, opts);
 
-        if (loadResult.constraints.maxcredits < loadResult.constraints.mincredits)
+        if (loadResult.constraints.maxCreditsPerTerm < loadResult.constraints.minCreditsPerTerm)
         {
-            throw runtime_error("Invalid: maxCredits < minCredits after overrides");
+            throw runtime_error("Invalid: maxCreditsPerTerm < minCreditsPerTerm after overrides");
         }
 
         CourseGraph graph;
@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
         {
             auto hints = Hints::analyze(
                 loadResult.constraints.numTerms,
-                loadResult.constraints.maxcredits,
+                loadResult.constraints.maxCreditsPerTerm,
                 loadResult.constraints.enforceCoreqTogether,
                 false,
                 false);

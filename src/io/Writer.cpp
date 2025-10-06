@@ -6,6 +6,9 @@
 #include <ctime>
 #include <algorithm>
 #include <nlohmann/json.hpp>
+#include <algorithm>
+#include <iomanip>
+#include <string>
 
 using json = nlohmann::json;
 using namespace std;
@@ -80,20 +83,20 @@ namespace planner
 
         for (const auto &term : enhanced.terms)
         {
-            if (term.totalCredits > constraints.maxcredits)
+            if (term.totalCredits > constraints.maxCreditsPerTerm)
             {
                 stringstream ss;
                 ss << "Warning: Term " << term.termNumber
                    << " exceeds max credits (" << term.totalCredits
-                   << " > " << constraints.maxcredits << ")";
+                   << " > " << constraints.maxCreditsPerTerm << ")";
                 enhanced.warnings.push_back(ss.str());
             }
-            if (term.totalCredits < constraints.mincredits)
+            if (term.totalCredits < constraints.minCreditsPerTerm)
             {
                 stringstream ss;
                 ss << "Warning: Term " << term.termNumber
                    << " below min credits (" << term.totalCredits
-                   << " < " << constraints.mincredits << ")";
+                   << " < " << constraints.minCreditsPerTerm << ")";
                 enhanced.warnings.push_back(ss.str());
             }
         }
@@ -125,8 +128,8 @@ namespace planner
 
         j["constraints"] = {
             {"numTerms", result.constraints.numTerms},
-            {"maxCreditsPerTerm", result.constraints.maxcredits},
-            {"minCreditsPerTerm", result.constraints.mincredits},
+            {"maxCreditsPerTerm", result.constraints.maxCreditsPerTerm},
+            {"minCreditsPerTerm", result.constraints.minCreditsPerTerm},
             {"enforceCoreqTogether", result.constraints.enforceCoreqTogether}};
 
         json termsArray = json::array();
@@ -189,16 +192,16 @@ namespace planner
         md << "- **Generated**: " << result.generatedAt << "\n";
         md << "- **Total Terms**: " << result.totalTermsUsed << " / " << result.constraints.numTerms << "\n";
         md << "- **Total Credits**: " << result.totalCredits << "\n";
-        md << "- **Credits per Term**: " << result.constraints.mincredits
-           << " - " << result.constraints.maxcredits << "\n\n";
+        md << "- **Credits per Term**: " << result.constraints.minCreditsPerTerm
+           << " - " << result.constraints.maxCreditsPerTerm << "\n\n";
 
         // Constraints
         md << "## Constraints\n\n";
         md << "| Parameter | Value |\n";
         md << "|-----------|-------|\n";
         md << "| Max Terms | " << result.constraints.numTerms << " |\n";
-        md << "| Max Credits/Term | " << result.constraints.maxcredits << " |\n";
-        md << "| Min Credits/Term | " << result.constraints.mincredits << " |\n";
+        md << "| Max Credits/Term | " << result.constraints.maxCreditsPerTerm << " |\n";
+        md << "| Min Credits/Term | " << result.constraints.minCreditsPerTerm << " |\n";
         md << "| Enforce Coreq Together | " << (result.constraints.enforceCoreqTogether ? "Yes" : "No") << " |\n\n";
 
         // Terms
@@ -247,29 +250,31 @@ namespace planner
         }
 
         // Credits breakdown chart (simple ASCII)
-        if (!result.terms.empty())
-        {
+        if (!result.terms.empty()) {
             md << "## Credits Distribution\n\n";
             md << "```\n";
 
-            int maxCredits = 0;
-            for (const auto &term : result.terms)
-            {
-                maxCredits = max(maxCredits, term.totalCredits);
-            }
+        constexpr int BAR_WIDTH = 40;
+        static constexpr const char* BLOCK = "\xE2\x96\x88"; // UTF-8 cho '█'
 
-            for (const auto &term : result.terms)
-            {
-                md << "Term " << setw(2) << term.termNumber << " [" << setw(2) << term.totalCredits << "] ";
-
-                int bars = (term.totalCredits * 40) / max(maxCredits, 1);
-                for (int i = 0; i < bars; ++i)
-                    md << "█";
-                md << "\n";
-            }
-
-            md << "```\n\n";
+        int maxCredits = 0;
+        for (const auto& term : result.terms) {
+            maxCredits = std::max(maxCredits, term.totalCredits);
         }
+        if (maxCredits <= 0) maxCredits = 1; 
+
+        md << "[0]";
+        md << std::string(BAR_WIDTH - 5, ' ') << "[" << maxCredits << "]\n";
+
+        for (const auto& term : result.terms) {
+            md << "Term " << std::setw(2) << term.termNumber << " [" << std::setw(2) << term.totalCredits << "] | ";
+
+            const int bars = (term.totalCredits * BAR_WIDTH) / maxCredits;
+            for (int i = 0; i < bars; ++i) md << BLOCK;
+                md << "\n";
+        }
+        md << "```\n\n";
+    }
 
         // Footer
         md << "---\n";
@@ -300,8 +305,8 @@ namespace planner
 
         // Parse constraints
         result.constraints.numTerms = j["constraints"]["numTerms"];
-        result.constraints.maxcredits = j["constraints"]["maxCreditsPerTerm"];
-        result.constraints.mincredits = j["constraints"]["minCreditsPerTerm"];
+        result.constraints.maxCreditsPerTerm = j["constraints"]["maxCreditsPerTerm"];
+        result.constraints.minCreditsPerTerm = j["constraints"]["minCreditsPerTerm"];
         result.constraints.enforceCoreqTogether = j["constraints"]["enforceCoreqTogether"];
 
         // Parse terms
