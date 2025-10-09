@@ -13,7 +13,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include "Curriculum.h"
+#include "model/Curriculum.h"
 struct CourseGraph {
     int V = 0;
     std::vector<std::vector<int>> adj;

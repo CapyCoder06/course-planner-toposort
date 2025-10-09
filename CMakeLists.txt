@@ -1,50 +1,33 @@
-cmake_minimum_required(VERSION 3.16)
-project(course_planner CXX)
-set(CMAKE_CXX_STANDARD 20)
+cmake_minimum_required(VERSION 3.20)
+project(course_planner LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# -------- Core library --------
-set(PLANNER_SOURCES
-  src/io/Loader.cpp
-  src/io/Writer.cpp
-  src/graph/CourseGraph.cpp
-  src/graph/TopoSort.cpp
-  src/graph/CycleDiagnosis.cpp
-  src/planner/LongestPathDag.cpp
-  src/planner/TermAssigner.cpp
-  src/planner/Hints.cpp # có thì giữ, không có có thể xóa dòng này
-)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
-# Thêm PlanConstraints.cpp nếu tồn tại (tránh lỗi thiếu file)
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/model/PlanConstraints.cpp")
-  list(APPEND PLANNER_SOURCES src/model/PlanConstraints.cpp)
+# Qt6 trước, Qt5 fallback
+find_package(Qt6 6.2 COMPONENTS Widgets QUIET)
+if (Qt6_FOUND)
+  set(QT_PACKAGE Qt6)
+else()
+  find_package(Qt5 5.12 COMPONENTS Widgets REQUIRED)
+  set(QT_PACKAGE Qt5)
 endif()
 
-add_library(planner ${PLANNER_SOURCES})
+add_subdirectory(src)
+add_subdirectory(ui/huhu)
 
-target_include_directories(planner PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/src
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/model
-  ${CMAKE_CURRENT_SOURCE_DIR}/external
-)
-
-# -------- GoogleTest --------
-include(FetchContent)
-FetchContent_Declare(googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-  DOWNLOAD_EXTRACT_TIMESTAMP TRUE)
-FetchContent_MakeAvailable(googletest)
-enable_testing()
-
-add_executable(planner_tests
-  tests/writer_explain_test.cpp
-)
-target_link_libraries(planner_tests PRIVATE planner GTest::gtest_main)
-include(GoogleTest)
-gtest_discover_tests(planner_tests)
-
-# -------- CLI --------
-add_executable(planner_cli src/cli/main.cpp)
-target_link_libraries(planner_cli PRIVATE planner)
-target_include_directories(planner_cli PRIVATE src)
+# ---- OPTIONAL CLI (Wt) ----
+option(BUILD_CLI "Build the Wt CLI target" OFF)  # ⬅⬅ mặc định OFF
+if (BUILD_CLI)
+  # Nếu thực sự muốn build CLI thì mới cần Wt
+  find_package(Wt CONFIG QUIET)
+  if (NOT Wt_FOUND)
+    message(FATAL_ERROR "BUILD_CLI=ON nhưng không tìm thấy Wt. Cài Wt hoặc tắt BUILD_CLI.")
+  endif()
+  add_executable(course_cli src/cli/main.cpp)
+  target_link_libraries(course_cli PRIVATE course_core Wt::Wt Wt::WtHttp)
+endif()

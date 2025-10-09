@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowTitle">
+   <string>Course Planner</string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+
+    <!-- Hàng control: label + comboSpec + 2 nút -->
+    <item>
+     <layout class="QHBoxLayout" name="topControls">
+      <item>
+       <widget class="QLabel" name="lblSpec">
+        <property name="text"><string>Chuyên ngành:</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboSpec"/>
+      </item>
+      <item>
+       <spacer name="hspacer">
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnOpenJson">
+        <property name="text"><string>Open JSON…</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnBuildPlan">
+        <property name="text"><string>Build Plan</string></property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+
+    <!-- Tabs hiển thị 8 kỳ -->
+    <item>
+     <widget class="QTabWidget" name="tabs"/>
+    </item>
+
+    <!-- status nhỏ phía dưới -->
+    <item>
+     <widget class="QLabel" name="lblStatus">
+      <property name="text"><string>Ready</string></property>
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+
+  <widget class="QMenuBar" name="menubar">
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>File</string></property>
+    <addaction name="actionOpenJson"/>
+    <addaction name="actionExportTxt"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuRun">
+    <property name="title"><string>Run</string></property>
+    <addaction name="actionValidate"/>
+    <addaction name="actionTopo"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title"><string>Help</string></property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuRun"/>
+   <addaction name="menuHelp"/>
+  </widget>
+
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle"><string>mainToolBar</string></property>
+   <addaction name="actionOpenJson"/>
+   <addaction name="actionValidate"/>
+   <addaction name="actionTopo"/>
+   <addaction name="actionExportTxt"/>
+  </widget>
+
+  <widget class="QStatusBar" name="statusbar"/>
+
+  <!-- Actions -->
+  <action name="actionOpenJson"><property name="text"><string>Open JSON…</string></property></action>
+  <action name="actionExportTxt"><property name="text"><string>Export result…</string></property></action>
+  <action name="actionExit"><property name="text"><string>Exit</string></property></action>
+  <action name="actionValidate"><property name="text"><string>Validate (Detect cycles)</string></property></action>
+  <action name="actionTopo"><property name="text"><string>Run Topo</string></property></action>
+  <action name="actionAbout"><property name="text"><string>About…</string></property></action>
+ </widget>
+
+ <resources/>
+ <connections/>
+</ui>

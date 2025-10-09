@@ -1,5 +1,5 @@
 # =========================
-# OS / Editor
+# 1️⃣ OS / Editor Files
 # =========================
 .DS_Store
 Thumbs.db
@@ -10,53 +10,97 @@ Thumbs.db
 *.log
 
 # =========================
-# C/C++ (CMake, MSVC, MinGW, Ninja)
+# 2️⃣ C/C++ — CMake, MSVC, MinGW, Ninja, Qt
 # =========================
-# Build dirs (local)
-build/
-build_*/
+
+# --- Build directories ---
+build*/
 out/
 cmake-build-*/
-# CMake cache/artifacts
-CMakeFiles/
+
+# --- CMake cache & artifacts ---
 CMakeCache.txt
-cmake_install.cmake
-install_manifest.txt
+CMakeFiles/
+CMakeFiles-v1-*
+CMakeFiles-v2-*
+CMakePresets.json
+CMakeUserPresets.json
+CMakeSettings.json
+CMakeScripts/
+CMakeTmp/
 CTestTestfile.cmake
 Testing/
 Makefile
-# Tooling DB (ignore if bạn không dùng)
 compile_commands.json
+cmake_install.cmake
+install_manifest.txt
 
-# Compiled objects & libs
+# --- CMake/Qt generated data ---
+*.cmake.api/
+codemodel-v2-*
+cache-v2-*
+target-*
+index-*.json
+directory-*
+*.dir/
+*.rule
+*.depend
+*.ninja
+*.cbp
+*.code-workspace
+
+# --- Qt generated files ---
+*_autogen/
+moc_*.cpp
+moc_*.h
+mocs_*.cpp
+mocs_*.h
+ui_*.h
+qrc_*.cpp
+*.moc
+*.qmlc
+*.qmltypes
+*.qmake.stash
+*.pro.user*
+*_plugin_import.cpp
+*_qml_plugin_import.cpp
+*_qmlcache_loader.cpp
+timestamp
+deps
+*.qm
+*.ts
+*.qrc.dep
+*.qrc
+*.rcc
+
+# --- Compiled objects & binaries ---
 *.o
 *.obj
-*.lo
-*.la
 *.a
 *.lib
 *.so
 *.dylib
 *.dll
+*.exe
 *.exp
 *.idb
 *.pdb
 *.ilk
 *.rsp
 
-# Coverage & dep files
+# --- Coverage & dependency files ---
+*.d
 *.gcda
 *.gcno
 *.gcov
 *.profraw
 *.profdata
-*.d
 
-# Third-party fetched by CMake (e.g., GoogleTest via FetchContent)
+# --- Third-party fetched by CMake ---
 _deps/
 
 # =========================
-# UI (Vite/React/TS)
+# 3️⃣ UI — React / Vite / TypeScript
 # =========================
 ui/node_modules/
 ui/dist/
@@ -64,21 +108,12 @@ ui/dist-ssr/
 ui/.vite/
 ui/.cache/
 ui/.eslintcache
-# Env files (chỉ ignore nếu không commit .env)
 ui/.env.local
 ui/.env.*.local
 
 # =========================
-# Misc
+# 4️⃣ Misc / Temporary
 # =========================
-# Windows executables & installers
-*.exe
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Archives / temp
 *.zip
 *.7z
 *.tar
@@ -88,3 +123,7 @@ ui/.env.*.local
 *.tmp
 *.temp
 *.swp
+*.msi
+*.msix
+*.msm
+*.msp
